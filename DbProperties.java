@@ -3,17 +3,20 @@ package Incognito;
 import org.json.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public record DbProperties() {
-    private final static String path = "db_settings.json"; // Path to custom settings file.
-    private static JSONObject settings;
+    private final static String path = "src/Incognito/db_settings.json"; // Path to custom settings file.
+    private static JSONObject settings = null;
 
     static {
         try {
-            settings = new JSONObject(new FileInputStream(path).toString());
+            settings = new JSONObject(new String(new FileInputStream(path).readAllBytes()));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            System.err.println(e + "\nFile not found at " + path);
+            System.err.println(e + "\nFile not found at location " + path);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
