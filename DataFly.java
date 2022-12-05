@@ -307,7 +307,7 @@ public class DataFly {
         String header = "/home/bob/IdeaProjects/Incognito/src/dataFly/";
 
         for(int i = 0; i < table.noOfColumns;  i++){
-            DGHTree tree = DGHTree.createDGHTree(table.getQuasiIden().getData());
+            DGHTree tree = DGHTree.createDGHTreeNumericRange(table.getQuasiIden().getData());
             dghTrees.add(tree);
         }
 

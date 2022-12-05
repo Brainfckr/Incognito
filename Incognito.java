@@ -3,9 +3,6 @@
 
 package Incognito;
 
-import dataFly.DGHTree;
-import dataFly.DataFly;
-import dataFly.PrivateTable;
 import java.io.FileNotFoundException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -39,7 +36,7 @@ import java.util.Scanner;
         incognito.table = incognito.dataFly.setup();
 
         //ask user for k
-        System.out.print("What's k ? ");
+        System.out.print("What's k? ");
         Scanner keyboard = new Scanner(System.in);
         int kAnon = keyboard.nextInt();
 
@@ -69,11 +66,12 @@ import java.util.Scanner;
          * @throws FileNotFoundException
          */
         public void mainIncognitoAlgorithm(int kAnon) throws FileNotFoundException {
-        getQuasiCombinations(table, 1); //should go till n // change to 1
+            int numOfQIDs = table.getQuasiIden().getData().size();
+        getQuasiCombinations(table, 1);
         createGraphsForRattributes();
         ArrayList<Vertex> queue;
 
-        for(int i = 1; i <= table.getQuasiIden().getData().size(); i++){
+        for(int i = 1; i <= numOfQIDs; i++){
 
             for (String s : quasiCombinationList) {
                 Graph tempGraph = rAttributeGen.get(s);//change to get x
@@ -162,7 +160,7 @@ import java.util.Scanner;
          *@param input  ---> Input Array
          *@param temp ---> Temporary array to store current combination
          *@param start &
-         *@param end ---> Staring and Ending indexes in input[]
+         *@param end ---> Starting and Ending indexes in input[]
          *@param index  ---> Current index in data[]
          *@param r ---> Size of a combination to be printed
          * As inspired by
@@ -172,12 +170,14 @@ import java.util.Scanner;
          */
         public void combination(String[] input, String[] temp, int start,
                 int end,int index, int r) throws FileNotFoundException{
+            System.out.println("yo" + Arrays.toString(input));
             //Current combination is ready to be added to list
             if(index == r){
                 String combine = temp[0] + " "+ getDGHeight(temp[0]);
                 for(int j = 1; j < r; j++){
                     combine = combine + ":" + temp[j] + " "+ getDGHeight(temp[j]);
                 }
+                System.out.println("combine "+ combine);
                 quasiCombinationList.add(combine);
             }
         // replace index with all possible elements. The condition
@@ -199,23 +199,25 @@ import java.util.Scanner;
         public String getDGHeight(String quasi) throws FileNotFoundException{
             ArrayList<DGHTree> dghTrees = dataFly.createDGHTrees(table);
             for (DGHTree dghTree : dghTrees) {
+                System.out.println(dghTree.getLabel());
 
                 if (dghTree.getLabel().equalsIgnoreCase(quasi)) {
                     return String.valueOf(dghTree.getHeight() - 1);
                 }
             }
+            System.out.println("tester");
             return "";
         }
 
         /**
-         * Creates the possible parents of a vertex. i.e if the parents are
+         * Creates the possible parents of a vertex. i.e. if the parents are
          * generalized, the result is v
          * @param v - vertex
          */
         public void descendFromTopVertex(Vertex v){
+            System.out.println(v.getData());
             String [] arr = v.getData().split(":");
-            //System.out.print("arr - ");
-            System.out.println(Arrays.toString(arr));
+            System.out.println("Guckk" + Arrays.toString(arr));
             LinkedHashMap<String, Integer> quasiIDTopHeights = new LinkedHashMap<>();
             for (String s : arr) {
                 quasiIDTopHeights.put(s.substring(0, s.indexOf(" ")),

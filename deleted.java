@@ -1,9 +1,6 @@
 
 package Incognito;
 
-import dataFly.DGHTree;
-import dataFly.DataFly;
-import dataFly.PrivateTable;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 

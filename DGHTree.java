@@ -2,12 +2,11 @@ package Incognito;
 
 // import dataFly.DGHNode;
 
+import javax.crypto.spec.DHGenParameterSpec;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  *
@@ -163,11 +162,11 @@ public class DGHTree
      * Counts from root to leaf and sets value to height
      */
     public void setHeight(){
-        if(root.isNull() == false){
+        if(!root.isNull()){
             height = 1;
         }
         DGHNode node = root;    
-        while(node.isLeaf() == false){
+        while(!node.isLeaf()){
             height++;
             int max = node.children.get(0).getChildCount();
             node = node.children.get(0);
@@ -181,7 +180,58 @@ public class DGHTree
             
         }
     }
-    
+
+    public static DGHTree createDGHTreeNumericRange(ArrayList<String> values) throws FileNotFoundException{
+        ArrayList<Integer> intValues = new ArrayList<>();
+        ArrayList<String> ranges = new ArrayList<>();
+
+        for (String value : values){
+            int intValue = Integer.parseInt(value);
+            if (!intValues.contains(intValue)){
+                intValues.add(intValue);
+            }
+        }
+
+        int min = Integer.parseInt(Collections.min(values));
+        int max = Integer.parseInt(Collections.max(values));
+        int noOfRanges = (max - min)/10;
+        if(((max - min)%10) != 0){
+            noOfRanges ++;
+        }
+
+        for(int i = 0; i < noOfRanges; i++){
+            String range = min + "-" + (min + 9);
+            ranges.add(range);
+            //System.out.println("noOfRange " + i + " : "+ range);
+            min = min + 10;
+        }
+        //add ranges to DGHTree, we starting from the root
+        DGHTree tree = new DGHTree(new DGHNode("****"));
+        for (String range : ranges) {
+            DGHNode node = new DGHNode(range);
+            // System.out.println("noOfRange " + i + " : "+ node.getData());
+            node.setParent(tree.root);
+            tree.root.children.add(node);
+        }
+        //add individual values as children to ranges
+        for(int i = 0; i < tree.root.children.size(); i++){
+            //System.out.println("Tree Root Children - " + tree.root.children.size());
+            for (Integer value : intValues) {
+                String range2 = tree.root.children.get(i).getData();
+                //System.out.println("range - " + range2);
+                String[] minMax = range2.split("-");
+                if (value >= Integer.parseInt(minMax[0])) {
+                    if (value <= Integer.parseInt(minMax[1])) {
+                        DGHNode node = new DGHNode(String.valueOf(value));
+                        node.setParent(new DGHNode(range2));
+                        tree.root.children.get(i).children.add(node);
+                    }
+                }
+            }
+        }
+        return tree;
+    }
+
     /**
      * Creates a DGH Tree for numeric data
      * E.g from 1234 -> 123* -> 12** -> 1*** -> ****
@@ -195,29 +245,28 @@ public class DGHTree
         DGHTree tree = new DGHTree();
         ArrayList<DGHNode> valueNodes = new ArrayList<>();
         //ArrayList<ArrayList> valueNodeParents = new ArrayList<>();
-        
-            for(int i = 0; i < values.size(); i++){
-                valueNodes.add(new DGHNode(values.get(i)));
-            }
-            for(int j = 0; j < valueNodes.size(); j++){
-                setAllParents(valueNodes.get(j), valueNodes.get(j).getData().length()-1);
-            }
+
+        for (String value : values) {
+            valueNodes.add(new DGHNode(value));
+        }
+        for (DGHNode valueNode : valueNodes) {
+            setAllParents(valueNode, valueNode.getData().length() - 1);
+        }
             /*for(int i = 0; i < valueNodes.size(); i++){
             valueNodeParents.add(new ArrayList<DGHNode>());
             }*/
-            String dghFile = "/home/bob/IdeaProjects/Incognito/src/dataFly/createdDGHTree.txt";
+            String dghFile = "/home/bob/IdeaProjects/Incognito/src/Incognito/createdDGHTree.txt";
             File infile = new File(dghFile);
-            PrintWriter writer = new PrintWriter(infile); 
-            for(int i = 0; i < valueNodes.size(); i++){
-                DGHNode test = valueNodes.get(i);
-                while(test != null){
-                    //System.out.print(test.data + ",");
-                    writer.print(test.data + ",");
-                    test = test.parent;
-                }
-                //System.out.println();
-                writer.println();
+            PrintWriter writer = new PrintWriter(infile);
+        for (DGHNode test : valueNodes) {
+            while (test != null) {
+                //System.out.print(test.data + ",");
+                writer.print(test.data + ",");
+                test = test.parent;
             }
+            //System.out.println();
+            writer.println();
+        }
             writer.close();
             
             Scanner scanner = new Scanner(infile);            
@@ -249,7 +298,7 @@ public class DGHTree
                     tree.search(tree.root, line[i]);
                     DGHNode testChild = new DGHNode(line[i-1]);
                     testChild.setParent(tree.current);
-                    if(tree.current.hasChild(testChild) == false)
+                    if(!tree.current.hasChild(testChild))
                     {
                     tree.current.children.add(testChild);
                     }
@@ -272,26 +321,25 @@ public class DGHTree
         DGHTree tree = new DGHTree();
         ArrayList<DGHNode> dateNodes = new ArrayList<>();
 
-           for(int i = 0; i < dates.size(); i++){
-                dateNodes.add(new DGHNode(dates.get(i)));
-            }
-            for(int j = 0; j < dateNodes.size(); j++){
-                setAllParentsForDates(dateNodes.get(j), 3);//3 for each and **** for root 
-            }
+        for (String date : dates) {
+            dateNodes.add(new DGHNode(date));
+        }
+        for (DGHNode dateNode : dateNodes) {
+            setAllParentsForDates(dateNode, 3);//3 for each and **** for root
+        }
             
             String dghFile = "/Users/adenugad/NetBeansProjects/kAnonAlgorithms/src/datafly/createdDGHTree.txt";
             File infile = new File(dghFile);
-            PrintWriter writer = new PrintWriter(infile); 
-            for(int i = 0; i < dateNodes.size(); i++){
-                DGHNode test = dateNodes.get(i);
-                while(test != null){
-                    //System.out.print(test.data + ",");
-                    writer.print(test.data + ",");
-                    test = test.parent;
-                }
-                //System.out.println();
-                writer.println();
+            PrintWriter writer = new PrintWriter(infile);
+        for (DGHNode test : dateNodes) {
+            while (test != null) {
+                //System.out.print(test.data + ",");
+                writer.print(test.data + ",");
+                test = test.parent;
             }
+            //System.out.println();
+            writer.println();
+        }
             writer.close();
             
             Scanner scanner = new Scanner(infile);            
@@ -316,7 +364,7 @@ public class DGHTree
                     tree.search(tree.root, line[i]);
                     DGHNode testChild = new DGHNode(line[i-1]);
                     testChild.setParent(tree.current);
-                    if(tree.current.hasChild(testChild) == false)
+                    if(!tree.current.hasChild(testChild))
                     {
                     tree.current.children.add(testChild);
                     }
@@ -338,9 +386,9 @@ public class DGHTree
         //form year ranges so i only first 4
         ArrayList<Integer> years = new ArrayList<>();
         ArrayList<String> yearRanges = new ArrayList<>();
-        for(int i = 0; i < dates.size();i++){
-            String year = dates.get(i).substring(0, 4);
-            if(years.contains(Integer.parseInt(year)) == false){
+        for (String date : dates) {
+            String year = date.substring(0, 4);
+            if (!years.contains(Integer.parseInt(year))) {
                 years.add(Integer.parseInt(year));
             }
         }
@@ -363,7 +411,7 @@ public class DGHTree
         }
         
         for(int i = 0; i < noOfRanges; i++){
-            String range = String.valueOf(min) + "-" + String.valueOf(min+9);
+            String range = min + "-" + (min + 9);
             yearRanges.add(range);
             //System.out.println("noOfRange " + i + " : "+ range);
             min = min + 10;
@@ -371,21 +419,21 @@ public class DGHTree
         //add ranges to DGHTree, we starting from the root
         DGHTree tree = new DGHTree(new DGHNode("****"));
         //System.out.println("Year Range size - " + yearRanges.size());
-        for(int i = 0; i < yearRanges.size(); i++){
-            DGHNode node = new DGHNode(yearRanges.get(i));
-           // System.out.println("noOfRange " + i + " : "+ node.getData());
+        for (String yearRange : yearRanges) {
+            DGHNode node = new DGHNode(yearRange);
+            // System.out.println("noOfRange " + i + " : "+ node.getData());
             node.setParent(tree.root);
             tree.root.children.add(node);
         }
         //add individual years as children to year ranges
         for(int i = 0; i < tree.root.children.size(); i++){
             //System.out.println("Tree Root Children - " + tree.root.children.size());
-            for(int j = 0; j < years.size(); j++){
+            for (Integer year : years) {
                 String range2 = tree.root.children.get(i).getData();
                 //System.out.println("range - " + range2);
-                if(years.get(j) >= Integer.parseInt(range2.substring(0,4))){
-                    if(years.get(j) <= Integer.parseInt(range2.substring(5))){
-                        DGHNode node = new DGHNode(String.valueOf(years.get(j)));
+                if (year >= Integer.parseInt(range2.substring(0, 4))) {
+                    if (year <= Integer.parseInt(range2.substring(5))) {
+                        DGHNode node = new DGHNode(String.valueOf(year));
                         node.setParent(new DGHNode(range2));
                         tree.root.children.get(i).children.add(node);
                     }
@@ -399,7 +447,7 @@ public class DGHTree
                     if(Integer.parseInt(dates.get(k).substring(0, 4)) == 
                             Integer.parseInt(tree.root.children.get(i).children.get(j).getData())){
                         DGHNode node = new DGHNode(dates.get(k).substring(0, 7));
-                        if(tree.root.children.get(i).children.get(j).hasChild(node) == false)
+                        if(!tree.root.children.get(i).children.get(j).hasChild(node))
                         {
                         node.setParent(tree.root.children.get(i).children.get(j));
                         tree.root.children.get(i).children.get(j).children.add(node);
@@ -434,6 +482,15 @@ public class DGHTree
      * @param i = number of digits in data
      */
     public static void setAllParents(DGHNode node, int i){
+        if(i >= 0){
+            node.setParent(modifyString(node.getData(), i));
+            i--;
+            node.parent.children.add(node);
+            setAllParents(node.parent, i);
+        }
+    }
+
+    public static void setAllParentsNumericRange(DGHNode node, int i){
         if(i >= 0){
             node.setParent(modifyString(node.getData(), i));
             i--;
