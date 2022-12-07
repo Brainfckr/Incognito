@@ -175,6 +175,7 @@ import java.util.Scanner;
             if(index == r){
                 String combine = temp[0] + " "+ getDGHeight(temp[0]);
                 for(int j = 1; j < r; j++){
+                    System.out.println("hallo");
                     combine = combine + ":" + temp[j] + " "+ getDGHeight(temp[j]);
                 }
                 System.out.println("combine "+ combine);
@@ -197,9 +198,11 @@ import java.util.Scanner;
          * @throws FileNotFoundException
          */
         public String getDGHeight(String quasi) throws FileNotFoundException{
+            System.out.println("quasi " + quasi);
             ArrayList<DGHTree> dghTrees = dataFly.createDGHTrees(table);
+            System.out.println(dghTrees.size());
             for (DGHTree dghTree : dghTrees) {
-                System.out.println(dghTree.getLabel());
+                System.out.println("mal hier" + dghTree.getLabel());
 
                 if (dghTree.getLabel().equalsIgnoreCase(quasi)) {
                     return String.valueOf(dghTree.getHeight() - 1);
@@ -267,7 +270,7 @@ import java.util.Scanner;
          * @param v - vertex
          * @return
          */
-        public boolean checkIfAtBottom(Vertex v){
+        public boolean IsAtBottom(Vertex v){
 
             String [] arr = v.getData().split(":");
             for (String s : arr) {
@@ -288,7 +291,7 @@ import java.util.Scanner;
         public void createGraphsForRattributes(){
             rAttributeGen = new LinkedHashMap<>();
             for (String s : quasiCombinationList) {
-                //System.out.println(quasiCombinationList.get(j));
+                System.out.println("s: " + s);
 
 
                 Vertex topRoot = new Vertex(s);
@@ -297,7 +300,7 @@ import java.util.Scanner;
                 int origLength = mainGraph.getVertices().size();
                 descendFromTopVertex(mainGraph.getVertex(0));
 
-                while (!checkIfAtBottom(mainGraph.getVertex(origLength))) {
+                while (!IsAtBottom(mainGraph.getVertex(origLength - 1))) {
                     int newLength = mainGraph.getVertices().size();
                     if (newLength > origLength) {
                         for (int i = origLength; i < newLength; i++) {

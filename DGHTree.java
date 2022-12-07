@@ -186,14 +186,14 @@ public class DGHTree
         ArrayList<String> ranges = new ArrayList<>();
 
         for (String value : values){
-            int intValue = Integer.parseInt(value);
+            int intValue = Integer.parseInt(value.substring(0, value.length() - 2));
             if (!intValues.contains(intValue)){
                 intValues.add(intValue);
             }
         }
 
-        int min = Integer.parseInt(Collections.min(values));
-        int max = Integer.parseInt(Collections.max(values));
+        int min = Collections.min(intValues);
+        int max = Collections.max(intValues);
         int noOfRanges = (max - min)/10;
         if(((max - min)%10) != 0){
             noOfRanges ++;
@@ -205,7 +205,7 @@ public class DGHTree
             //System.out.println("noOfRange " + i + " : "+ range);
             min = min + 10;
         }
-        //add ranges to DGHTree, we starting from the root
+        //add ranges to DGHTree, we are starting from the root
         DGHTree tree = new DGHTree(new DGHNode("****"));
         for (String range : ranges) {
             DGHNode node = new DGHNode(range);

@@ -306,8 +306,13 @@ public class DataFly {
         ArrayList<DGHTree> dghTrees = new ArrayList<>();
         String header = "/home/bob/IdeaProjects/Incognito/src/dataFly/";
 
-        for(int i = 0; i < table.noOfColumns;  i++){
-            DGHTree tree = DGHTree.createDGHTreeNumericRange(table.getQuasiIden().getData());
+        for(int i = 0; i < table.getQuasiIden().getData().size();  i++){
+            ArrayList<String> data = new ArrayList<>();
+            for (TableRow row : table.getTableRows()) {
+                data.add(row.getData().get(i));
+            }
+            DGHTree tree = DGHTree.createDGHTreeNumericRange(data);
+            tree.setLabel(table.getQuasiIden().getData().get(i));
             dghTrees.add(tree);
         }
 

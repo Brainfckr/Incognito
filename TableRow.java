@@ -26,7 +26,7 @@ public class TableRow {
     public TableRow(ArrayList<String> data, int rowNumber){
         this.data.addAll(data);
     }
-    //assuming row is representated as ... , ... , ... , ... ,
+    //assuming row is represented as ... , ... , ... , ... ,
     public void addData(String data){
         String[] stringArray = data.split(",");
         for (String stringArray1 : stringArray) {
