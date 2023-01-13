@@ -26,12 +26,8 @@ public class Graph {
     
     public Graph copy(){
         Graph graph = new Graph();
-        for(int i = 0; i < vertices.size(); i++ ){
-            graph.vertices.add(vertices.get(i));
-        }
-        for(int i = 0; i < edges.size(); i++ ){
-            graph.edges.add(edges.get(i));
-        }
+        graph.vertices.addAll(vertices);
+        graph.edges.addAll(edges);
         
         return graph;
     }
@@ -52,23 +48,21 @@ public class Graph {
     }
     
     public void addEdge(Edge edge){
-        if(edges.contains(edge) == false)
+        if(!edges.contains(edge))
         {
         edges.add(edge);
         }
     }
     
     public void addVertex(Vertex v){
-        if(vertices.contains(v) == false)
+        if(!vertices.contains(v))
         {
         vertices.add(v);
         }
     }
     
     public void removeEdge(Edge e){
-        if(edges.contains(e)){
-            edges.remove(e);
-        }
+        edges.remove(e);
         e.from.getIncidentEdges().remove(e);
         //e.to.getIncidentEdges().remove(e);   
     }
@@ -86,10 +80,10 @@ public class Graph {
     
     public void printOut(){
         //System.out.println(vertices.size());
-        for(int i = 0; i < vertices.size(); i++){
-            for(int j = 0; j < vertices.get(i).getNumOfIncidentEdges(); j++){
-                System.out.println(vertices.get(i).getData() + " -> " 
-                        + vertices.get(i).getIncidentEdges().get(j).getAdjacentVertex(vertices.get(i)).getData());
+        for (Vertex vertex : vertices) {
+            for (int j = 0; j < vertex.getNumOfIncidentEdges(); j++) {
+                System.out.println(vertex.getData() + " -> "
+                        + vertex.getIncidentEdges().get(j).getAdjacentVertex(vertex).getData());
             }
             System.out.println();
         }
@@ -101,9 +95,9 @@ public class Graph {
      * @return vertex if it's in graph
      */
     public Vertex hasVertex(Vertex v){
-        for(int i = 0; i < vertices.size(); i++){
-            if(vertices.get(i).equals(v)){
-                return vertices.get(i);
+        for (Vertex vertex : vertices) {
+            if (vertex.equals(v)) {
+                return vertex;
             }
         }
         return v;
@@ -115,8 +109,8 @@ public class Graph {
      * @return 
      */
     public boolean hasVertex2(Vertex v){
-        for(int i = 0; i < vertices.size(); i++){
-            if(vertices.get(i).equals(v)){
+        for (Vertex vertex : vertices) {
+            if (vertex.equals(v)) {
                 return true;
             }
         }
@@ -129,17 +123,18 @@ public class Graph {
      */
     public ArrayList<Vertex> getRoots(){
         ArrayList<Vertex> queue = new ArrayList<>();
-        for(int j = 0; j < vertices.size(); j++){
+        for (Vertex vertex : vertices) {
             boolean issaRoot = false;
-            for(int i = 0; i < edges.size(); i++){
-                if(vertices.get(j).equals(edges.get(i).to)){
+            for (Edge edge : edges) {
+                if (vertex.equals(edge.to)) {
                     issaRoot = true;
+                    break;
                 }
             }
-            if(issaRoot == false){
-                queue.add(vertices.get(j));
+            if (!issaRoot) {
+                queue.add(vertex);
             }
-        
+
         }
     return queue;
     }

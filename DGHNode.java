@@ -31,8 +31,8 @@ public class DGHNode implements TreeNode {
         this.data = data;
         this.parent = parent.copy();//have to define copy method
         //this.children = children;
-        for(int i = 0; i < children.size();i++){
-            this.children.add(children.get(i).copy());
+        for (DGHNode child : children) {
+            this.children.add(child.copy());
         }
     }
 
@@ -113,8 +113,8 @@ public class DGHNode implements TreeNode {
     }
     
     public boolean hasChild(DGHNode node){
-        for(int i = 0; i < children.size(); i++){
-            if(children.get(i).getData().equalsIgnoreCase(node.getData())){
+        for (DGHNode child : children) {
+            if (child.getData().equalsIgnoreCase(node.getData())) {
                 return true;
             }
         }

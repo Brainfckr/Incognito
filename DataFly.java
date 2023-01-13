@@ -58,8 +58,8 @@ public class DataFly {
         HashMap<ArrayList, Integer> freqSet = getFreqSet(table);
         Integer[] freqValues = new Integer[freqSet.size()]; 
         freqValues = freqSet.values().toArray(freqValues);
-        for(int i = 0; i < freqValues.length; i++){
-            if(freqValues[i] < kanon){
+        for (Integer freqValue : freqValues) {
+            if (freqValue < kanon) {
                 return false;
             }
         }
@@ -80,10 +80,6 @@ public class DataFly {
         //myPrivateTable.setRowHeadings("Race,DOB,ID,Sex,Allele 1,Allele 2");
         /*instead of hard-code, in future should be user input*/
 
-        //ask user for number of QIDs
-        System.out.print("QIDs are expected to be the first attributes in the tuple.\nWhat's the number of QIDs? ");
-        Scanner keyboard = new Scanner(System.in);
-        int numOfQids = keyboard.nextInt();
 
         DatabaseMetaData metaData = conn.getMetaData();
         StringBuilder columnNames = new StringBuilder();
@@ -97,11 +93,16 @@ public class DataFly {
         myPrivateTable.setRowHeadings(String.valueOf(columnNames));
         System.out.println(myPrivateTable.getTopRow().getData());
 
+
+        //ask user for number of QIDs
+        System.out.print("QIDs are expected to be the first attributes in the tuple.\nWhat's the number of QIDs? ");
+        Scanner keyboard = new Scanner(System.in);
+        int numOfQids = keyboard.nextInt();
+
         //myPrivateTable.setQuasi("Race,DOB,ID,Sex");// DO THIS LATER!!!
         myPrivateTable.setQuasi(new ArrayList<>(myPrivateTable.getTopRow().getData().subList(0, numOfQids)));
-        //myPrivateTable.setTableValues("/home/bob/IdeaProjects/Incognito/src/dataFly/tableInputs.txt");
-        myPrivateTable.setTableValues(conn);//uncomment this when connecting to DB
-        myPrivateTable = rectifyTableColumn(myPrivateTable, 2);//rectify ID in this case
+        myPrivateTable.setTableValues(conn);
+        //myPrivateTable = rectifyTableColumn(myPrivateTable, 2);
         //myPrivateTable.printFormat();
         
         return myPrivateTable;
@@ -140,7 +141,7 @@ public class DataFly {
             }
             //include DGH Tree
             //here I can determine thru if statements what generate w/ DGH to run
-            //I'm assumming Column to be generalized is 0-3
+            //I'm assuming column to be generalized is 0-3
             dghTrees.get(colToBeGeneralized).setDGHNodeLevels(dghTrees.get(colToBeGeneralized).root
                     , dghTrees.get(colToBeGeneralized).getHeight());
             myPrivateTable = generateTableWithDGHTable(myPrivateTable, dghTrees.get(colToBeGeneralized),
@@ -173,7 +174,7 @@ public class DataFly {
                 //System.out.println("quasiIden " + quasiIden);
             }
             if(freqSet.containsKey(quasiIden)){
-                freqSet.replace(quasiIden, freqSet.get(quasiIden),freqSet.get(quasiIden)+ 1); 
+                freqSet.replace(quasiIden, freqSet.get(quasiIden),freqSet.get(quasiIden) + 1);
             }
             else{
                 freqSet.put(quasiIden, 1);
@@ -311,8 +312,10 @@ public class DataFly {
             for (TableRow row : table.getTableRows()) {
                 data.add(row.getData().get(i));
             }
+            System.out.println("data in createTreeS\n" + data);
             DGHTree tree = DGHTree.createDGHTreeNumericRange(data);
             tree.setLabel(table.getQuasiIden().getData().get(i));
+            tree.setHeight();
             dghTrees.add(tree);
         }
 
@@ -383,10 +386,10 @@ public class DataFly {
         }
          ArrayList[] setOfKeys = new ArrayList[freqList.size()];//freqList has distinct keys but it's in row form
          setOfKeys = freqList.keySet().toArray(setOfKeys);
-        for(int i = 0; i < setOfKeys.length; i++){
-            for(int j = 0; j < setOfKeys[i].size(); j++){
-                if(quasiIden.get(j).contains(setOfKeys[i].get(j)) == false)
-                    quasiIden.get(j).add(setOfKeys[i].get(j));    
+        for (ArrayList setOfKey : setOfKeys) {
+            for (int j = 0; j < setOfKey.size(); j++) {
+                if (!quasiIden.get(j).contains(setOfKey.get(j)))
+                    quasiIden.get(j).add(setOfKey.get(j));
             }
         }
         int max = 0;
@@ -413,16 +416,15 @@ public class DataFly {
         Integer[] freqValues = new Integer[freqSet.size()]; 
         freqValues = freqSet.values().toArray(freqValues);
         int noOfTuplesWithDistinctSequences = 0;
-        for (int i = 0; i < freqValues.length; i++){
+        for (Integer freqValue : freqValues) {
            /*if(freqValues[i] < kAnon)
                 return true;*/
-          if(freqValues[i] == 1)
-           {
-               noOfTuplesWithDistinctSequences++;
-               //System.out.println("noOfTuplesWithDistinctSequences: " + noOfTuplesWithDistinctSequences);
-           }
-           if(noOfTuplesWithDistinctSequences >= kAnon)
-               return true;    
+            if (freqValue == 1) {
+                noOfTuplesWithDistinctSequences++;
+                //System.out.println("noOfTuplesWithDistinctSequences: " + noOfTuplesWithDistinctSequences);
+            }
+            if (noOfTuplesWithDistinctSequences >= kAnon)
+                return true;
         }
         return false;
     }
@@ -444,37 +446,36 @@ public class DataFly {
         HashMap<ArrayList, Integer> freqSet = getFreqSet(newTable);
         ArrayList[] setOfKeys = new ArrayList[freqSet.size()];
         setOfKeys = freqSet.keySet().toArray(setOfKeys);
-            for(int i = 0; i < setOfKeys.length; i++){
-                if(freqSet.get(setOfKeys[i]) < kAnon){
-                    sequencesToSuppress.add(setOfKeys[i]);
-                }
+        for (ArrayList setOfKey : setOfKeys) {
+            if (freqSet.get(setOfKey) < kAnon) {
+                sequencesToSuppress.add(setOfKey);
             }
+        }
             //assuming the number of rows to be suppressed be less than kAnon 
-            for(int j = 0; j < sequencesToSuppress.size(); j++){
+        for (ArrayList toSuppress : sequencesToSuppress) {
 
-                //System.out.println("sequencesToSuppress" + sequencesToSuppress);
-                    int k = 0;
-                    
-                    while(k < newTable.tableRows.size()){
-                        int oldSize = newTable.tableRows.size();
-                    ArrayList<String> quasiIdenVal = new ArrayList<>();
-                    //= newTable.tableRows.get(k).data;
-                    for(int m = 0; m < quasiIdenCol.size(); m++){
-                        quasiIdenVal.add(newTable.tableRows.get(k).data.get(quasiIdenCol.get(m)));
-                    }
-                    if(sequencesToSuppress.get(j).equals(quasiIdenVal)){
-                        //System.out.println("k - " + k);
-                        newTable.tableRows.remove(k);
-                    }
-                   if(oldSize > newTable.tableRows.size())
-                    {
-                        k = 0;
-                    }else{
-                        k++;
-                    }
-                    //k++;
+            //System.out.println("sequencesToSuppress" + sequencesToSuppress);
+            int k = 0;
+
+            while (k < newTable.tableRows.size()) {
+                int oldSize = newTable.tableRows.size();
+                ArrayList<String> quasiIdenVal = new ArrayList<>();
+                //= newTable.tableRows.get(k).data;
+                for (Integer integer : quasiIdenCol) {
+                    quasiIdenVal.add(newTable.tableRows.get(k).data.get(integer));
                 }
+                if (toSuppress.equals(quasiIdenVal)) {
+                    //System.out.println("k - " + k);
+                    newTable.tableRows.remove(k);
+                }
+                if (oldSize > newTable.tableRows.size()) {
+                    k = 0;
+                } else {
+                    k++;
+                }
+                //k++;
             }
+        }
         
         return newTable;
     }

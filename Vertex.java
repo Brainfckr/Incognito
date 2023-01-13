@@ -21,15 +21,13 @@ public class Vertex {
     }
     
     public void addIncidentEdges(Edge edge){
-        if(incidentEdges.contains(edge) == false){
+        if(!incidentEdges.contains(edge)){
             incidentEdges.add(edge);
         }
     }
     
      public void removeIncidentEdges(Edge edge){
-        if(incidentEdges.contains(edge) == true){
-            incidentEdges.remove(edge);
-        }
+         incidentEdges.remove(edge);
     }
      
      public String getData(){
@@ -88,8 +86,8 @@ public class Vertex {
      public int getVertexHeight(){
          String[] arr = data.split(":");
          int height = 0;
-         for(int i = 0; i < arr.length; i++){
-            height = height + Integer.parseInt(arr[i].substring(arr[i].indexOf(" ") + 1));
+         for (String s : arr) {
+             height = height + Integer.parseInt(s.substring(s.indexOf(" ") + 1));
          }
          return height;
      }
@@ -100,12 +98,11 @@ public class Vertex {
       * @return list of vertices that this vertex directs towards
       */
      public ArrayList<Vertex> getDirectGeneralizations(ArrayList<Vertex> generalizations){
-         for(int i = 0; i < incidentEdges.size(); i++){
-             Vertex v = incidentEdges.get(i).getTo();
-                    if(generalizations.contains(v) == false)
-                    {
-                    generalizations.add(incidentEdges.get(i).getTo());
-                    } 
+         for (Edge incidentEdge : incidentEdges) {
+             Vertex v = incidentEdge.getTo();
+             if (!generalizations.contains(v)) {
+                 generalizations.add(incidentEdge.getTo());
+             }
          }
          return generalizations;
      }

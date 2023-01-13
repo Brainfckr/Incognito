@@ -38,9 +38,9 @@ import java.util.Scanner;
         //ask user for k
         System.out.print("What's k? ");
         Scanner keyboard = new Scanner(System.in);
-        int kAnon = keyboard.nextInt();
+        int k = keyboard.nextInt();
 
-        incognito.mainIncognitoAlgorithm(kAnon);
+        incognito.mainIncognitoAlgorithm(k);
         incognito.displayGeneralizationCombinations();
         System.out.println();
         incognito.showFinalGeneralizedTables();
@@ -62,14 +62,15 @@ import java.util.Scanner;
          * The main Incognito Algorithm, goes through every possible
          * generalization and stores those that are k-anonymous
          * It uses the generalization property
-         * @param kAnon - k in k-Anonymous
+         * @param k - k in k-Anonymous
          * @throws FileNotFoundException
          */
-        public void mainIncognitoAlgorithm(int kAnon) throws FileNotFoundException {
+        public void mainIncognitoAlgorithm(int k) throws FileNotFoundException {
             int numOfQIDs = table.getQuasiIden().getData().size();
-        getQuasiCombinations(table, 1);
-        createGraphsForRattributes();
-        ArrayList<Vertex> queue;
+            System.out.println(table.getTopRow().getData());
+            getQuasiCombinations(table, 1);
+            createGraphsForRattributes();
+            ArrayList<Vertex> queue;
 
         for(int i = 1; i <= numOfQIDs; i++){
 
@@ -83,7 +84,7 @@ import java.util.Scanner;
                     boolean isKAnon;//= false; //checks if it's k-Anonymous
 
                     if (!node.isMarked()) {
-                        isKAnon = generalizeWithLevel(node.getData(), kAnon);
+                        isKAnon = generalizeWithLevel(node.getData(), k);
                         System.out.println("node: " + node.getData());
                         System.out.println("Am I k-Anon ? " + isKAnon);
                         System.out.println();
@@ -205,7 +206,7 @@ import java.util.Scanner;
                 System.out.println("mal hier" + dghTree.getLabel());
 
                 if (dghTree.getLabel().equalsIgnoreCase(quasi)) {
-                    return String.valueOf(dghTree.getHeight() - 1);
+                    return String.valueOf(dghTree.getHeight()); // -1?
                 }
             }
             System.out.println("tester");
@@ -218,14 +219,14 @@ import java.util.Scanner;
          * @param v - vertex
          */
         public void descendFromTopVertex(Vertex v){
-            System.out.println(v.getData());
+            System.out.println("descend v: " + v.getData());
             String [] arr = v.getData().split(":");
             System.out.println("Guckk" + Arrays.toString(arr));
             LinkedHashMap<String, Integer> quasiIDTopHeights = new LinkedHashMap<>();
             for (String s : arr) {
                 quasiIDTopHeights.put(s.substring(0, s.indexOf(" ")),
                         Integer.parseInt(s.substring(s.indexOf(" ") + 1)));
-                //System.out.print("quasiIDTop2 - ");  System.out.println(quasiIDTopHeights);
+                System.out.print("quasiIDTop2 - ");  System.out.println(quasiIDTopHeights);
             }
             //System.out.print("quasiIDTop - ");  System.out.println(quasiIDTopHeights);
             String[] quasiID = new String[quasiIDTopHeights.size()];

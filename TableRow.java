@@ -4,6 +4,7 @@
 package Incognito;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -18,9 +19,7 @@ public class TableRow {
     }
     public TableRow(String data, int rowNumber){
         String[] stringArray = data.split(",");
-        for (String stringArray1 : stringArray) {
-            this.data.add(stringArray1);
-        }
+        Collections.addAll(this.data, stringArray);
         this.rowNumber = rowNumber;
     }
     public TableRow(ArrayList<String> data, int rowNumber){
@@ -29,9 +28,7 @@ public class TableRow {
     //assuming row is represented as ... , ... , ... , ... ,
     public void addData(String data){
         String[] stringArray = data.split(",");
-        for (String stringArray1 : stringArray) {
-            this.data.add(stringArray1);
-        }
+        Collections.addAll(this.data, stringArray);
     }
     public void addData(ArrayList<String> data){
         this.data.addAll(data);
@@ -49,7 +46,7 @@ public class TableRow {
         else
         {
             for(int i = 0; i < data.size(); i++){
-                if((data.get(i).equalsIgnoreCase(row.data.get(i))) == false)
+                if(!(data.get(i).equalsIgnoreCase(row.data.get(i))))
                     return false;
             }
             return true;
@@ -60,15 +57,13 @@ public class TableRow {
     public TableRow copy(){
         TableRow newTableRow = new TableRow();
         newTableRow.rowNumber = rowNumber;
-        for(int i = 0; i < data.size(); i++){
-            newTableRow.data.add(data.get(i));
-        }
+        newTableRow.data.addAll(data);
         return newTableRow;
     }
     
     public void rowPrint(){
-        for(int i = 0; i < data.size(); i++ ){
-            System.out.printf("%15s", data.get(i));
+        for (String datum : data) {
+            System.out.printf("%15s", datum);
         }
         System.out.println();
     }

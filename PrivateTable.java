@@ -3,7 +3,6 @@
  */
 package Incognito;
 
-// import dataFly.TableRow;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -79,19 +78,18 @@ public class PrivateTable {
                  + "inner JOIN production_patient p ON production_genotype.patient_id = p.id "
                  + "inner JOIN production_patientphi ph ON p.id = ph.id");*/
          ResultSet rs = st.executeQuery(
-                 "SELECT * "
-                 + "FROM \"Cleveland_Heart_Disease\""
+                 "SELECT * FROM \"Cleveland_Heart_Disease\""
          );
          ResultSetMetaData metadata = rs.getMetaData();
          int columnCount = metadata.getColumnCount();
          
          int x  = 1;//measure current row in table
          while(rs.next()){
-             String line = "";
+             StringBuilder line = new StringBuilder();
              for(int i = 1; i <= columnCount; i++){
-              line = line + rs.getString(i) + ",";
+              line.append(rs.getString(i)).append(",");
              }
-             tableRows.add(new TableRow(line, x));
+             tableRows.add(new TableRow(line.toString(), x));
              x++;
          }
      }
@@ -135,8 +133,8 @@ public class PrivateTable {
      public void printFormat(){
          topRow.rowPrint();
          System.out.println();
-         for(int i = 0; i < tableRows.size(); i++){
-             tableRows.get(i).rowPrint();
+         for (TableRow tableRow : tableRows) {
+             tableRow.rowPrint();
          }
          System.out.println("Size Of Released Table: " + tableRows.size());
      }
