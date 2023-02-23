@@ -100,7 +100,7 @@ public class DGHTree
             search(treeRoot.children.get(i), data);
         }
         if(treeRoot.getData().equalsIgnoreCase(data)){
-            System.out.println("I got here! " + treeRoot.data);
+            // System.out.println("I got here! " + treeRoot.data);
             //System.out.println(treeRoot.isNull());
             //newNode = treeRoot.copy();
             current = treeRoot;
@@ -182,7 +182,7 @@ public class DGHTree
     }
 
     public static DGHTree createDGHTreeNumericRange(ArrayList<String> values) throws FileNotFoundException{
-        System.out.println("bin da ");
+        // System.out.println("bin da ");
         ArrayList<Integer> intValues = new ArrayList<>();
         ArrayList<String> ranges = new ArrayList<>();
 
@@ -204,7 +204,7 @@ public class DGHTree
         if(((max - min)%10) != 0){
             noOfRanges ++;
         }
-        System.out.println("min, max, #ranges" + min + " " + max + " " + noOfRanges);
+        // System.out.println("min, max, #ranges" + min + " " + max + " " + noOfRanges);
 
         for(int i = 0; i < noOfRanges; i++){
             String range = min + "-" + (min + 9);
@@ -251,7 +251,7 @@ public class DGHTree
                 writer.println();
         }
         writer.close();
-        printTree(tree.root, 0);
+        // printTree(tree.root, 0);
         return tree;
     }
 

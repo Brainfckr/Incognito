@@ -41,8 +41,8 @@ import java.util.Scanner;
         int k = keyboard.nextInt();
 
         incognito.mainIncognitoAlgorithm(k);
-        incognito.displayGeneralizationCombinations();
-        System.out.println();
+        //incognito.displayGeneralizationCombinations();
+        // System.out.println();
         incognito.showFinalGeneralizedTables();
      }
 
@@ -67,7 +67,7 @@ import java.util.Scanner;
          */
         public void mainIncognitoAlgorithm(int k) throws FileNotFoundException {
             int numOfQIDs = table.getQuasiIden().getData().size();
-            System.out.println(table.getTopRow().getData());
+            // System.out.println(table.getTopRow().getData());
             getQuasiCombinations(table, 1);
             createGraphsForRattributes();
             ArrayList<Vertex> queue;
@@ -85,9 +85,9 @@ import java.util.Scanner;
 
                     if (!node.isMarked()) {
                         isKAnon = generalizeWithLevel(node.getData(), k);
-                        System.out.println("node: " + node.getData());
-                        System.out.println("Am I k-Anon ? " + isKAnon);
-                        System.out.println();
+                        //System.out.println("node: " + node.getData());
+                        //System.out.println("Am I k-Anon ? " + isKAnon);
+                        //System.out.println();
                         if (isKAnon) {
                             markAllDirectGeneralizations(node);
                         } else {
@@ -171,15 +171,15 @@ import java.util.Scanner;
          */
         public void combination(String[] input, String[] temp, int start,
                 int end,int index, int r) throws FileNotFoundException{
-            System.out.println("yo" + Arrays.toString(input));
+            // System.out.println("yo" + Arrays.toString(input));
             //Current combination is ready to be added to list
             if(index == r){
                 String combine = temp[0] + " "+ getDGHeight(temp[0]);
                 for(int j = 1; j < r; j++){
-                    System.out.println("hallo");
+                    // System.out.println("hallo");
                     combine = combine + ":" + temp[j] + " "+ getDGHeight(temp[j]);
                 }
-                System.out.println("combine "+ combine);
+                // System.out.println("combine "+ combine);
                 quasiCombinationList.add(combine);
             }
         // replace index with all possible elements. The condition
@@ -199,11 +199,11 @@ import java.util.Scanner;
          * @throws FileNotFoundException
          */
         public String getDGHeight(String quasi) throws FileNotFoundException{
-            System.out.println("quasi " + quasi);
+            //System.out.println("quasi " + quasi);
             ArrayList<DGHTree> dghTrees = dataFly.createDGHTrees(table);
-            System.out.println(dghTrees.size());
+            //System.out.println(dghTrees.size());
             for (DGHTree dghTree : dghTrees) {
-                System.out.println("mal hier" + dghTree.getLabel());
+                // System.out.println("mal hier" + dghTree.getLabel());
 
                 if (dghTree.getLabel().equalsIgnoreCase(quasi)) {
                     return String.valueOf(dghTree.getHeight()); // -1?
@@ -219,14 +219,15 @@ import java.util.Scanner;
          * @param v - vertex
          */
         public void descendFromTopVertex(Vertex v){
-            System.out.println("descend v: " + v.getData());
+            //System.out.println("descend v: " + v.getData());
             String [] arr = v.getData().split(":");
-            System.out.println("Guckk" + Arrays.toString(arr));
+            // System.out.println("Guckk" + Arrays.toString(arr));
             LinkedHashMap<String, Integer> quasiIDTopHeights = new LinkedHashMap<>();
             for (String s : arr) {
                 quasiIDTopHeights.put(s.substring(0, s.indexOf(" ")),
                         Integer.parseInt(s.substring(s.indexOf(" ") + 1)));
-                System.out.print("quasiIDTop2 - ");  System.out.println(quasiIDTopHeights);
+                //System.out.print("quasiIDTop2 - ");
+                //System.out.println(quasiIDTopHeights);
             }
             //System.out.print("quasiIDTop - ");  System.out.println(quasiIDTopHeights);
             String[] quasiID = new String[quasiIDTopHeights.size()];
@@ -292,7 +293,7 @@ import java.util.Scanner;
         public void createGraphsForRattributes(){
             rAttributeGen = new LinkedHashMap<>();
             for (String s : quasiCombinationList) {
-                System.out.println("s: " + s);
+                //System.out.println("s: " + s);
 
 
                 Vertex topRoot = new Vertex(s);

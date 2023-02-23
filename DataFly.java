@@ -312,7 +312,7 @@ public class DataFly {
             for (TableRow row : table.getTableRows()) {
                 data.add(row.getData().get(i));
             }
-            System.out.println("data in createTreeS\n" + data);
+            //System.out.println("data in createTreeS\n" + data);
             DGHTree tree = DGHTree.createDGHTreeNumericRange(data);
             tree.setLabel(table.getQuasiIden().getData().get(i));
             tree.setHeight();
